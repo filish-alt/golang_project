@@ -8,11 +8,19 @@ dropdb:
 docker exec -it postgres2 dropdb simpleproject
 
 migrateup:
- migrate -path dbmigrate -database "postgresql://root:1234@192.168.99.100:5432/simpleproject?sslmode=disable" -verbose
- up
-migratedown: migrate -path dbmigrate -database "postgresql://root:1234@192.168.99.100:5432/simpleproject?sslmode=disable" -verbose
- down
+ migrate -path db/migration -database "postgresql://root:1234@192.168.99.100:5432/simple_bank?sslmode=disable" -verbose up
 
+migratedown: 
+migrate -path db/migration  -database "postgresql://root:1234@192.168.99.100:5432/simple_bank?sslmode=disable" -verbose down
+
+proto:
+ protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
+    --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+    proto/*.proto
+dbdocs:
+dbdocs build docs/db.dbml
+dbschema:
+dbml2sql --postgres -o docs/schema.sql docs/db.dbml  
 sqlc:
 sqlc generate
 
