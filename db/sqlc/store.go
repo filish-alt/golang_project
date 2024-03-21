@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/jackc/pgx/v5"
+	
 )
 
 type Store struct {
@@ -19,9 +19,7 @@ func NewStore(db *sql.DB) *Store{
 		Queries: New(db),
 	}
 }
-func NewSQLDBWrapper(db *sql.DB) *Store {
-    return &Store{db: db}
-}
+
 
 func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error{
        tx,err := store.db.BeginTx(ctx,nil)

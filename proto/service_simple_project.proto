@@ -7,10 +7,34 @@ import "rpc_create_user.proto";
 import "rpc_login_user.proto";
 import "google/api/annotations.proto";
 
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+
 option go_package="simpleproject/pb";
 
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "Simple project API";
+        version: "1.0";
+        contact: {
+            name: "Tech School";
+            url: "https://github.com/filish-alt/";
+            email: "filagotshewafera@gmail.com";
+        };
+    };
+};
 
 service simpleproject{
-    rpc Createuser (CreateUserRequest) returns (CreateUserResponse);
-    rpc Loginuser (LoginUserRequest) returns (LoginUserResponse);
+    rpc Createuser (CreateUserRequest) returns (CreateUserResponse){
+        option (google.api.http) = {
+            post: "/v1/create_user"
+            body: "*"
+        };
+    };
+    rpc Loginuser (LoginUserRequest) returns (LoginUserResponse){
+        option (google.api.http) = {
+            post: "/v1/login_user"
+            body: "*"
+        };
+    };
 }

@@ -42,8 +42,8 @@ func newUserResponse(user db.User) userResponse {
 		Username:          user.Username,
 		FullName:          user.FullName,
 		Email:             user.Email,
-		PasswordChangedAt: user.PasswordChangedAt.Time,
-		CreatedAt:         user.CreatedAt.Time,
+		PasswordChangedAt: user.PasswordChangedAt,
+		CreatedAt:         user.CreatedAt,
 	}
 }
 
@@ -134,7 +134,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		return
 	}
 	rsp := loginUserResponse{
-		SessionID:  session.ID.Bytes,
+		SessionID:  session.ID,
 		AccessToken:           accessToken,
 		AccessTokenExpiresAt:  accessPayload.ExpiredAt,
 		RefreshToken: refreshToken,
