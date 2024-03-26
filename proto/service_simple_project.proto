@@ -5,17 +5,19 @@ package pb;
 
 import "rpc_create_user.proto";
 import "rpc_login_user.proto";
+import "rpc_update_user.proto";
+import "rpc_verify_email.proto";
 import "google/api/annotations.proto";
 
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 
-option go_package="simpleproject/pb";
+option go_package="go.mod/pb";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     info: {
         title: "Simple project API";
-        version: "1.0";
+        version: "1.2";
         contact: {
             name: "Tech School";
             url: "https://github.com/filish-alt/";
@@ -31,6 +33,24 @@ service simpleproject{
             body: "*"
         };
     };
+    rpc Verifyuser (VerifyEmailRequest) returns (VerifyEmailResponse){
+        option (google.api.http) = {
+            get: "/v1/verify_email"
+           
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to verify user's email address";
+            summary: "Verify email";
+        };
+    };
+
+    rpc Updateuser (UpdateUserRequest) returns (UpdateUserResponse){
+        option (google.api.http) = {
+            post: "/v1/update_user"
+            body: "*"
+        };
+    };
+
     rpc Loginuser (LoginUserRequest) returns (LoginUserResponse){
         option (google.api.http) = {
             post: "/v1/login_user"

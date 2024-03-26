@@ -5,9 +5,19 @@ import (
 	"database/sql"
 	"fmt"
 
-	
-)
 
+)
+// type store interface{
+// 	Querier
+// 	TransferTx(cts context.Context, arg TransferTxParams) (TranferTxResult)
+// 	CreateUserTx(ctx context.Context, arg CreateUserTxParams) (CreateUserTxResult, error)
+// VerifyEmailTx(ctx context.Context, arg VerifyEmailTxParams) (VerifyEmailTxResult, error)
+//}
+
+// type SQLStore struct{
+// 	db *sql.DB
+// 	*Queries
+// }
 type Store struct {
 	*Queries
 	db *sql.DB
@@ -37,72 +47,3 @@ q:=New(tx)
 }
 return tx.Commit()
 }
-
-type TransferTxParams struct{
-	FromAccountID int64 `json:"from_account_id`
-	ToAccountID   int64 `json:"To_account_id`
-	Amount        int64  `json:"amount`
-}
-type TranferTxResult struct{
-	FromAccount Account `json:"from_account`
-	ToAccount   Account `json:"To_account`
-	Transfer    Transfer`json:"transfer`
-	FromEntry   Entry `json:from_entry`
-	ToEntry     Entry `json:To_entry`
-
-}
-
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TranferTxResult, error){
-	var result TranferTxResult
-	
-	err := store.execTx(ctx,func(q *Queries) error{
-		var err error
-		result.Transfer,err =q.CreateTransfer(ctx, CreateTransferParams{
-			FromAccountID :arg.FromAccountID,
-			ToAccountID: arg.ToAccountID,
-			Amount: arg.Amount,
-		})
-		if err != nil{
-			return err
-		}
-		result.FromEntry,err =q.CreateEntry(ctx,CreateEntryParams{
-			AccountID: arg.FromAccountID,
-			Amount: -arg.Amount,
-		})
-		if err != nil{
-			return err
-		}
-		result.ToEntry,err =q.CreateEntry(ctx,CreateEntryParams{
-			AccountID: arg.ToAccountID,
-			Amount: arg.Amount,
-		})
-		if err != nil{
-			return err
-		}
-		return nil
-	})
-
-	return result ,err
-}
-// type TransferParam struct{
-//    Username pgtype
-// }
-
-// type TransferResult struct{
-//     User User
-// }
-// func(store *Store) TransferMoney(context context.Context,transferParam TransferParam) (TransferResult, error){
-//     var result TransferResult
-
-// 	err:=store.execTx(context, func(q *Queries) error {
-// 		result.User, err := q.CreateUsers(context, CreateUsersParams{
-//                Username: transferParam.Username,
-// 		})
-// 		if err!=nil{
-// 			return err
-// 		}
-// 		return nil
-// 	})
-
-// 	return result, err
-// }

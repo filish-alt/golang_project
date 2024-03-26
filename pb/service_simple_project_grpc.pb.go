@@ -20,6 +20,8 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	Simpleproject_Createuser_FullMethodName = "/pb.simpleproject/Createuser"
+	Simpleproject_Verifyuser_FullMethodName = "/pb.simpleproject/Verifyuser"
+	Simpleproject_Updateuser_FullMethodName = "/pb.simpleproject/Updateuser"
 	Simpleproject_Loginuser_FullMethodName  = "/pb.simpleproject/Loginuser"
 )
 
@@ -28,6 +30,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SimpleprojectClient interface {
 	Createuser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
+	Verifyuser(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
+	Updateuser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	Loginuser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
 }
 
@@ -48,6 +52,24 @@ func (c *simpleprojectClient) Createuser(ctx context.Context, in *CreateUserRequ
 	return out, nil
 }
 
+func (c *simpleprojectClient) Verifyuser(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error) {
+	out := new(VerifyEmailResponse)
+	err := c.cc.Invoke(ctx, Simpleproject_Verifyuser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *simpleprojectClient) Updateuser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
+	out := new(UpdateUserResponse)
+	err := c.cc.Invoke(ctx, Simpleproject_Updateuser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *simpleprojectClient) Loginuser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error) {
 	out := new(LoginUserResponse)
 	err := c.cc.Invoke(ctx, Simpleproject_Loginuser_FullMethodName, in, out, opts...)
@@ -62,6 +84,8 @@ func (c *simpleprojectClient) Loginuser(ctx context.Context, in *LoginUserReques
 // for forward compatibility
 type SimpleprojectServer interface {
 	Createuser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
+	Verifyuser(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
+	Updateuser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	Loginuser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
 	mustEmbedUnimplementedSimpleprojectServer()
 }
@@ -72,6 +96,12 @@ type UnimplementedSimpleprojectServer struct {
 
 func (UnimplementedSimpleprojectServer) Createuser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Createuser not implemented")
+}
+func (UnimplementedSimpleprojectServer) Verifyuser(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Verifyuser not implemented")
+}
+func (UnimplementedSimpleprojectServer) Updateuser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Updateuser not implemented")
 }
 func (UnimplementedSimpleprojectServer) Loginuser(context.Context, *LoginUserRequest) (*LoginUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Loginuser not implemented")
@@ -107,6 +137,42 @@ func _Simpleproject_Createuser_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Simpleproject_Verifyuser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SimpleprojectServer).Verifyuser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Simpleproject_Verifyuser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SimpleprojectServer).Verifyuser(ctx, req.(*VerifyEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Simpleproject_Updateuser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SimpleprojectServer).Updateuser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Simpleproject_Updateuser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SimpleprojectServer).Updateuser(ctx, req.(*UpdateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Simpleproject_Loginuser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LoginUserRequest)
 	if err := dec(in); err != nil {
@@ -135,6 +201,14 @@ var Simpleproject_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Createuser",
 			Handler:    _Simpleproject_Createuser_Handler,
+		},
+		{
+			MethodName: "Verifyuser",
+			Handler:    _Simpleproject_Verifyuser_Handler,
+		},
+		{
+			MethodName: "Updateuser",
+			Handler:    _Simpleproject_Updateuser_Handler,
 		},
 		{
 			MethodName: "Loginuser",

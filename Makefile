@@ -14,6 +14,7 @@ migratedown:
 migrate -path db/migration  -database "postgresql://root:1234@192.168.99.100:5432/simple_bank?sslmode=disable" -verbose down
 
 proto:
+rm -f pb/*.go
 rm -f docs/swagger/*.swagger.json
  protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
     --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
@@ -27,5 +28,11 @@ dbschema:
 dbml2sql --postgres -o docs/schema.sql docs/db.dbml  
 sqlc:
 sqlc generate
+
+mock:
+
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/techschool/simplebank/db/sqlc Store
+	mockgen -package mockwk -destination worker/mock/distributor.go simpleproject/worker TaskDistributor
 
 -PHONY: cratedb dropdb postgres migrateup migratedown sqlc proto

@@ -9,15 +9,20 @@ import (
 )
 
 type Config struct {
+	ENVIRONMENT          string        `mapstructur:"ENVIRONMENT"`
 	DBDriver             string        `mapstructur:"DB_DRIVER"`
 	DBSource             string        `mapstructur:"DB_SOURCE"`
+	RedisAddress         string        `mapstructure:"REDIS_ADDRESS"`
 	MigrationURL         string        `mapstructure:"MIGRATION_URL"`
 	TokenSymmetricKey    string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 	AccessTokenDuration  time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	RefreshTokenDuration time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
 	HTTPServerAddress    string        `mapstructure:"HTTP_SERVER_ADDRESS"`
 	GRPCServerAddress    string        `mapstructure:"GRPC_SERVER_ADDRESS"`
-}
+    EmailSenderName      string        `mapstructure:"EMAIL_SENDER_NAME"`
+	EmailSenderAddress   string        `mapstructure:"EMAIL_SENDER_ADDRESS"`
+	EmailSenderPassword  string        `mapstructure:"EMAIL_SENDER_PASSWORD"`
+ }
 
 // ExecContext implements db.DBTX.
 func (c Config) ExecContext(context.Context, string, ...interface{}) (sql.Result, error) {

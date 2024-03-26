@@ -7,6 +7,7 @@ import (
 	"go.mod/pb"
 	"go.mod/utils"
 	val "go.mod/validation"
+	"go.mod/worker"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -24,21 +25,31 @@ func (server Server) Createuser(ctx context.Context, req *pb.CreateUserRequest) 
 	
 	}
 
-	arg := db.CreateUserParams{
-		Username:       req.GetUsername(),
-		HashedPassword: hashedPassword,
-		FullName:       req.GetFullName(),
-		Email:          req.GetEmail(),
+	arg := db.CreateUserTxParams{
+		CreateUserParams: db.CreateUserParams{
+			Username:       req.GetUsername(),
+			HashedPassword: hashedPassword,
+			FullName:       req.GetFullName(),
+			Email:          req.GetEmail(),
+		},
+	AlterCreate: func(user db.User) error{
+		taskpayload := &worker.PayloadSendVerifyEmail{
+			UserName:user.Username,
+		}
+		return server.taskDistributor.DistributeTaskSendVerfiyEmail(ctx,taskpayload)
+			
+	},
 	}
 
-	user, err := server.store.CreateUser(ctx, arg)
+	txResult, err := server.store.CreateUserTx(ctx, arg)
 	if err != nil {
 		
 		return nil, status.Errorf(codes.Internal, "failed to create user: %s", err)
 	}
-
+	
+	
 	rsp :=&pb.CreateUserResponse{
-		User: convertUser(user),
+		User: convertUser(txResult.User),
 	}
 	return rsp,nil
 }

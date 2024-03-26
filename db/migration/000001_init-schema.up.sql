@@ -40,6 +40,11 @@ ALTER TABLE "transfers" ADD FOREIGN KEY ("from_account_id") REFERENCES "accounts
 
 ALTER TABLE "transfers" ADD FOREIGN KEY ("to_account_id") REFERENCES "accounts" ("id");
 
+
+
+ALTER TABLE "users" ADD COLUMN "role" varchar NOT NULL DEFAULT 'depositor';
+ALTER TABLE "users" DROP COLUMN "role";
+
 CREATE INDEX ON "accounts" ("owner");
 
 CREATE INDEX ON "entries" ("account_id");
